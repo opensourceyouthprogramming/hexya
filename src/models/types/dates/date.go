@@ -115,6 +115,34 @@ func (d Date) Sub(t Date) time.Duration {
 	return d.Time.Sub(t.Time)
 }
 
+// Copy returns a copy of d
+func (d Date) Copy() Date {
+	return Date{
+		Time: d.Time,
+	}
+}
+
+// SetYear changes the year value of d
+// returns d for chained calls
+func (d Date) SetYear(year int) Date {
+	d.Time = time.Date(year, d.Month(), d.Day(), 0, 0, 0, 0, d.Location())
+	return d
+}
+
+// SetMonth changes the month value of d
+// returns d for chained calls
+func (d Date) SetMonth(month time.Month) Date {
+	d.Time = time.Date(d.Year(), month, d.Day(), 0, 0, 0, 0, d.Location())
+	return d
+}
+
+// SetDay changes the day value of d
+// returns d for chained calls
+func (d Date) SetDay(day int) Date {
+	d.Time = time.Date(d.Year(), d.Month(), day, 0, 0, 0, 0, d.Location())
+	return d
+}
+
 // Today returns the current date
 func Today() Date {
 	return Date{time.Now()}
@@ -137,4 +165,32 @@ func ParseDate(value string) Date {
 func ParseDateWithLayout(layout, value string) (Date, error) {
 	t, err := time.Parse(layout, value)
 	return Date{Time: t}, err
+}
+
+// AddWeeks adds the given amount of weeks to d
+func (d Date) AddWeeks(amount int) Date {
+	return Date{
+		Time: d.Time.AddDate(0, 0, 7*amount),
+	}
+}
+
+// StartOfYear returns the date corresponding to the first day of d's year
+func (d Date) StartOfYear() Date {
+	return Date{
+		Time: time.Date(d.Year(), 1, 1, 0, 0, 0, 0, d.Location()),
+	}
+}
+
+// StartOfMonth returns the date corresponding to the first day of d's current month
+func (d Date) StartOfMonth() Date {
+	return Date{
+		Time: time.Date(d.Year(), d.Month(), 1, 0, 0, 0, 0, d.Location()),
+	}
+}
+
+// SetUnix returns the date corresponding to the given unix timestamp
+func (d Date) SetUnix(sec int64) Date {
+	return DateTime{
+		Time: time.Unix(sec, 0).In(d.Location()),
+	}.ToDate()
 }

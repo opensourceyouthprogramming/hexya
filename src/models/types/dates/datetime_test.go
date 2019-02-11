@@ -93,6 +93,7 @@ func TestDateTime(t *testing.T) {
 		Convey("Adding durations to datetimes", func() {
 			So(dateTime1.AddDate(0, 2, 3).Equal(ParseDateTime("2017-10-04 10:34:23")), ShouldBeTrue)
 			So(dateTime1.Add(2*time.Hour+11*time.Minute).Equal(ParseDateTime("2017-08-01 12:45:23")), ShouldBeTrue)
+			So(dateTime1.AddWeeks(2).Equal(ParseDateTime("2017-08-15 10:34:23")), ShouldBeTrue)
 		})
 		Convey("Timezone tests", func() {
 			dt1, _ := dateTime1.WithTimezone("Etc/GMT")
@@ -106,6 +107,17 @@ func TestDateTime(t *testing.T) {
 			So(err, ShouldNotBeNil)
 			values := TimeZones()
 			So(values, ShouldContain, "America/Scoresbysund")
+		})
+		Convey("Changing dates", func() {
+			dateCpy := dateTime1.Copy()
+			So(dateCpy.SetMonth(10).SetDay(4).Equal(ParseDateTime("2017-10-04 10:34:23")), ShouldBeTrue)
+			So(dateCpy.SetYear(1996).SetMonth(time.February).SetDay(30).SetHour(-2).SetMinute(50).SetSecond(-7).
+				Equal(DateTime{Time: time.Date(1996, 02, 29, 22, 49, 53, 0, time.UTC)}), ShouldBeTrue)
+			So(dateCpy.StartOfHour().Equal(ParseDateTime("2017-08-01 10:00:00")), ShouldBeTrue)
+			So(dateCpy.StartOfDay().Equal(ParseDateTime("2017-08-01 00:00:00")), ShouldBeTrue)
+			So(dateCpy.AddWeeks(2).StartOfMonth().Equal(ParseDateTime("2017-08-01 00:00:00")), ShouldBeTrue)
+			So(dateCpy.StartOfYear().Equal(ParseDateTime("2017-01-01 00:00:00")), ShouldBeTrue)
+			So(dateCpy.SetUnix(123456789).Equal(ParseDateTime("1973-11-29 21:33:09")), ShouldBeTrue)
 		})
 	})
 }

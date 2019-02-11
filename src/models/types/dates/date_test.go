@@ -94,6 +94,15 @@ func TestDate(t *testing.T) {
 		})
 		Convey("Adding durations to dates", func() {
 			So(date1.AddDate(0, 2, 3).Equal(ParseDate("2017-10-04")), ShouldBeTrue)
+			So(date1.AddWeeks(2).Equal(ParseDate("2017-08-15")), ShouldBeTrue)
+		})
+		Convey("Changing dates", func() {
+			dateCpy := date1.Copy()
+			So(dateCpy.SetMonth(10).SetDay(4).Equal(ParseDate("2017-10-04")), ShouldBeTrue)
+			So(dateCpy.SetYear(1996).SetMonth(time.February).SetDay(30).Equal(ParseDate("1996-03-01")), ShouldBeTrue)
+			So(dateCpy.AddWeeks(2).StartOfMonth().Equal(ParseDate("2017-08-01")), ShouldBeTrue)
+			So(dateCpy.StartOfYear().Equal(ParseDate("2017-01-01")), ShouldBeTrue)
+			So(dateCpy.SetUnix(123456789).Equal(ParseDate("1973-11-29")), ShouldBeTrue)
 		})
 	})
 }

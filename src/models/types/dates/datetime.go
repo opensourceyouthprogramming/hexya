@@ -176,3 +176,94 @@ func (d DateTime) AddDate(years, months, days int) DateTime {
 		Time: d.Time.AddDate(years, months, days),
 	}
 }
+
+// Copy returns a copy of d
+func (d DateTime) Copy() DateTime {
+	return DateTime{
+		Time: d.Time,
+	}
+}
+
+// SetYear changes the year value of d
+// returns d for chained calls
+func (d DateTime) SetYear(year int) DateTime {
+	d.Time = time.Date(year, d.Month(), d.Day(), d.Hour(), d.Minute(), d.Second(), 0, d.Location())
+	return d
+}
+
+// SetMonth changes the month value of d
+// returns d for chained calls
+func (d DateTime) SetMonth(month time.Month) DateTime {
+	d.Time = time.Date(d.Year(), month, d.Day(), d.Hour(), d.Minute(), d.Second(), 0, d.Location())
+	return d
+}
+
+// SetDay changes the day value of d
+// returns d for chained calls
+func (d DateTime) SetDay(day int) DateTime {
+	d.Time = time.Date(d.Year(), d.Month(), day, d.Hour(), d.Minute(), d.Second(), 0, d.Location())
+	return d
+}
+
+// SetHour changes the hour value of d
+// returns d for chained calls
+func (d DateTime) SetHour(hour int) DateTime {
+	d.Time = time.Date(d.Year(), d.Month(), d.Day(), hour, d.Minute(), d.Second(), 0, d.Location())
+	return d
+}
+
+// SetMinute changes the minute value of d
+// returns d for chained calls
+func (d DateTime) SetMinute(min int) DateTime {
+	d.Time = time.Date(d.Year(), d.Month(), d.Day(), d.Hour(), min, d.Second(), 0, d.Location())
+	return d
+}
+
+// SetSecond changes the second value of d
+// returns d for chained calls
+func (d DateTime) SetSecond(sec int) DateTime {
+	d.Time = time.Date(d.Year(), d.Month(), d.Day(), d.Hour(), d.Minute(), sec, 0, d.Location())
+	return d
+}
+
+// AddWeeks adds the given amount of weeks to d
+func (d DateTime) AddWeeks(amount int) DateTime {
+	return DateTime{
+		Time: d.Time.AddDate(0, 0, 7*amount),
+	}
+}
+
+// StartOfYear returns the DateTime corresponding to the first day of d's year at 00:00
+func (d DateTime) StartOfYear() DateTime {
+	return DateTime{
+		Time: time.Date(d.Year(), 1, 1, 0, 0, 0, 0, d.Location()),
+	}
+}
+
+// StartOfMonth returns the DateTime corresponding to the first day of d's current month at 00:00
+func (d DateTime) StartOfMonth() DateTime {
+	return DateTime{
+		Time: time.Date(d.Year(), d.Month(), 1, 0, 0, 0, 0, d.Location()),
+	}
+}
+
+// StartOfYear returns the DateTime corresponding to the beginning of the day, at 00:00
+func (d DateTime) StartOfDay() DateTime {
+	return DateTime{
+		Time: time.Date(d.Year(), d.Month(), d.Day(), 0, 0, 0, 0, d.Location()),
+	}
+}
+
+// StartOfMonth returns the DateTime corresponding to the beginning of the current our
+func (d DateTime) StartOfHour() DateTime {
+	return DateTime{
+		Time: time.Date(d.Year(), d.Month(), d.Day(), d.Hour(), 0, 0, 0, d.Location()),
+	}
+}
+
+// SetUnix returns the DateTime corresponding to the given unix timestamp
+func (d DateTime) SetUnix(sec int64) DateTime {
+	return DateTime{
+		Time: time.Unix(sec, 0).In(d.Location()),
+	}
+}
